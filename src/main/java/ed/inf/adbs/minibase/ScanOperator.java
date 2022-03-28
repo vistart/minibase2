@@ -30,9 +30,9 @@ public class ScanOperator extends Operator {
 	@Override
 	Tuple getNextTuple() {
 		if (scanner.hasNextLine()) {
-			String[] vals = scanner.nextLine().split(", ");
+			String[] val = scanner.nextLine().split(", ");
 			ArrayList<String> values = new ArrayList<String>();
-			for(int i=0; i<vals.length; i++) {
+			for(int i=0; i<val.length; i++) {
 				values.add(vals[i]);
 			}
 
