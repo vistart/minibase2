@@ -1,11 +1,11 @@
 package ed.inf.adbs.minibase;
 
+import ed.inf.adbs.minibase.base.RelationalAtom;
+import ed.inf.adbs.minibase.base.Term;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import ed.inf.adbs.minibase.base.RelationalAtom;
-import ed.inf.adbs.minibase.base.Term;
 
 public class ProjectOperator extends Operator {
 	private Operator childOperator;
@@ -36,9 +36,9 @@ public class ProjectOperator extends Operator {
 		HashMap<String, Integer> newVarRef = new HashMap<String, Integer>();
 		
 		ArrayList<String> values = tuple.getValues();
-		ArrayList<String> schema = tuple.getSchema();
+		ArrayList<String> schema = tuple.getSchemas();
 		ArrayList<Term> terms = tuple.getTerms();
-		HashMap<String, Integer> varRef = tuple.getVariableRefernce();
+		HashMap<String, Integer> varRef = tuple.getReferences();
 		for(int i=0; i<this.projectVar.size(); i++) {
 			int pos = varRef.get(projectVar.get(i));
 			newValues.add(values.get(pos));

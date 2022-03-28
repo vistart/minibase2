@@ -1,25 +1,24 @@
 package ed.inf.adbs.minibase;
 
-import java.util.ArrayList;
-import java.util.List;
-
-
 import ed.inf.adbs.minibase.base.ComparisonAtom;
 import ed.inf.adbs.minibase.base.Constant;
 import ed.inf.adbs.minibase.base.Term;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class SelectOperator extends Operator {
-	private Operator childOperator;
+	private Operator child;
 	private ArrayList<ComparisonAtom> conditions;
 	
-	public SelectOperator(Operator childOperator, ArrayList<ComparisonAtom> conditions) {
-		this.childOperator = childOperator;
+	public SelectOperator(Operator child, ArrayList<ComparisonAtom> conditions) {
+		this.child = child;
 		this.conditions = conditions;
 	}
 	@Override
 	Tuple getNextTuple() {
-		Tuple tuple = childOperator.getNextTuple();
+		Tuple tuple = child.getNextTuple();
 		while(tuple != null) {
 			boolean pass = true;
 			if(!this.checkConstantTerms(tuple)) {
@@ -33,14 +32,14 @@ public class SelectOperator extends Operator {
 			if(pass) {
 				return tuple;
 			}
-			tuple = childOperator.getNextTuple();
+			tuple = child.getNextTuple();
 		}
 		return null;
 	}
 
 	@Override
 	void reset() {
-		childOperator.reset();
+		child.reset();
 	}
 	/***
 	 * if the atom has constant term, check if the tuple match

@@ -1,11 +1,11 @@
 package ed.inf.adbs.minibase;
 
-import java.util.HashMap;
-
 import ed.inf.adbs.minibase.base.ComparisonAtom;
 import ed.inf.adbs.minibase.base.StringConstant;
 import ed.inf.adbs.minibase.base.Term;
 import ed.inf.adbs.minibase.base.Variable;
+
+import java.util.HashMap;
 
 /***
  * a class that provide methods to check if tuple pass the condition from the Comparison Atom
@@ -25,7 +25,7 @@ public class ComparisonCheck {
 		String comparisonOp = condition.getOp().toString();
 		Term term1 = condition.getTerm1();
 		Term term2 = condition.getTerm2();
-		HashMap<String,Integer> varRef = tuple.getVariableRefernce();
+		HashMap<String,Integer> varRef = tuple.getReferences();
 		//if the term of the condition not in this tuple, return true
 		if(!varRef.containsKey(term1.toString()) && !varRef.containsKey(term2.toString())) {
 			return true;
