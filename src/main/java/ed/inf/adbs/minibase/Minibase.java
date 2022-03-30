@@ -1,20 +1,12 @@
 package ed.inf.adbs.minibase;
 
 import ed.inf.adbs.minibase.base.Atom;
-import ed.inf.adbs.minibase.base.ComparisonAtom;
 import ed.inf.adbs.minibase.base.Query;
 import ed.inf.adbs.minibase.base.RelationalAtom;
-import ed.inf.adbs.minibase.base.Term;
-import ed.inf.adbs.minibase.base.Variable;
 import ed.inf.adbs.minibase.parser.QueryParser;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,126 +17,126 @@ import java.util.List;
  */
 public class Minibase {
 
-    public static void main(String[] args) {
+	public static void main(String[] args) {
 
-        if (args.length != 3) {
-            System.err.println("Usage: Minibase database_dir input_file output_file");
-            return;
-        }
+		if (args.length != 3) {
+			System.err.println("Usage: Minibase database_dir input_file output_file");
+			return;
+		}
 
-        String databaseDir = args[0];
-        String inputFile = args[1];
-        String outputFile = args[2];
+		String databaseDir = args[0];
+		String inputFile = args[1];
+		String outputFile = args[2];
 
-        evaluateCQ(databaseDir, inputFile, outputFile);
+		evaluateCQ(databaseDir, inputFile, outputFile);
 
-//        parsingExample(inputFile);
-    }
+         //parsingExample(inputFile);
+	}
 
-    public static void evaluateCQ(String databaseDir, String inputFile, String outputFile) {
-    	
-    	Query query = null;
-    	try {
-    		query = QueryParser.parse(Paths.get(inputFile));
-    	}
-    	catch (Exception e){
-    		System.err.println("Exception occurred during parsing");
-            e.printStackTrace();
-    	}
-    	Interpreter interpreter = new Interpreter(query, databaseDir);
-    	ArrayList<Tuple> result = interpreter.getResult();
-    	removeDuplicate(result);
-    	saveCSV(result, outputFile);
-    	
-    }
-    /***
-     * given a list of tuples, remove the duplicates
-     * @param tuples
-     */
-    private static void removeDuplicate(ArrayList<Tuple> tuples) {
-    	for(int i=0; i<tuples.size(); i++) {
-    		for(int j=i+1; j<tuples.size(); j++) {
-    			if(sameTuples(tuples.get(i), tuples.get(j))) {
-    				tuples.remove(j);
-    				j--;
-    			}
-    		}
-    	}
-    }
-    /***
-     * check if tuple1 and tuple2 have the same value
-     * @param tuple1 
-     * @param tuple2
-     * @return true if tuple1 and tuple2 have same values, false if not
-     */
-    private static boolean sameTuples(Tuple tuple1, Tuple tuple2) {
-    	for(int i=0; i<tuple1.getValues().size(); i++) {
-    		if(!tuple1.getValueAt(i).equals(tuple2.getValueAt(i))) {
-    			return false;
-    		}
-    	}
-    	return true;
-    }
-    /***
-     * save a list of tuples to a csv file
-     * @param tuples
-     * @param outputPath
-     */
-    private static void saveCSV(ArrayList<Tuple> tuples, String outputPath) {
-    	FileWriter writer = null;
+	public static void evaluateCQ(String databaseDir, String inputFile, String outputFile) {
 
-    	 try {
-    	     writer = new FileWriter(outputPath);
-    	     for(int i=0; i<tuples.size(); i++) {
-    	    	 ArrayList<String> vals = tuples.get(i).getValues();
-    	    	 for(int k=0; k<vals.size(); k++) {
-    	    		 writer.append(vals.get(k));
-    	    		 if(k!=vals.size()-1) {
-    	    			 writer.append(',');
-    	    		 }
-    	    	 }
-    	    	 if(i!=tuples.size()-1) {
-    	    		 writer.append('\n');
-    	    	 }
-    	     }
+		Query query = null;
+		try {
+			query = QueryParser.parse(Paths.get(inputFile));
+		}
+		catch (Exception e){
+			System.err.println("Exception occurred during parsing");
+			e.printStackTrace();
+		}
+		Interpreter interpreter = new Interpreter(query, databaseDir);
+		ArrayList<Tuple> result = interpreter.getResult();
+		//removeDuplicate(result);
+		saveCSV(result, outputFile);
 
-    	     System.out.println("CSV file is created...");
+	}
+//	/***
+//	 * given a list of tuples, remove the duplicates
+//	 * @param tuples
+//	 */
+//	private static void removeDuplicate(ArrayList<Tuple> tuples) {
+//		for(int i=0; i<tuples.size(); i++) {
+//			for(int j=i+1; j<tuples.size(); j++) {
+//				if(sameTuples(tuples.get(i), tuples.get(j))) {
+//					tuples.remove(j);
+//					j--;
+//				}
+//			}
+//		}
+//	}
+//	/***
+//	 * check if tuple1 and tuple2 have the same value
+//	 * @param tuple1
+//	 * @param tuple2
+//	 * @return true if tuple1 and tuple2 have same values, false if not
+//	 */
+//	private static boolean sameTuples(Tuple tuple1, Tuple tuple2) {
+//		for(int i=0; i<tuple1.getValues().size(); i++) {
+//			if(!tuple1.getValueAt(i).equals(tuple2.getValueAt(i))) {
+//				return false;
+//			}
+//		}
+//		return true;
+//	}
+	/***
+	 * save a list of tuples to a csv file
+	 * @param tuples
+	 * @param outputPath
+	 */
+	private static void saveCSV(ArrayList<Tuple> tuples, String outputPath) {
+		FileWriter writer = null;
 
-    	  } catch (IOException e) {
-    	     e.printStackTrace();
-    	  } finally {
-    	        try {
-    	      writer.flush();
-    	      writer.close();
-    	        } catch (IOException e) {
-    	      e.printStackTrace();
-    	}
-    	}
-    }
+		try {
+			writer = new FileWriter(outputPath);
+			for(int i=0; i<tuples.size(); i++) {
+				ArrayList<String> vals = tuples.get(i).getValues();
+				for(int k=0; k<vals.size(); k++) {
+					writer.append(vals.get(k));
+					if(k!=vals.size()-1) {
+						writer.append(',');
+					}
+				}
+				if(i!=tuples.size()-1) {
+					writer.append('\n');
+				}
+			}
 
-    /**
-     * Example method for getting started with the parser.
-     * Reads CQ from a file and prints it to screen, then extracts Head and Body
-     * from the query and prints them to screen.
-     */
+			System.out.println("CSV file is created...");
 
-    public static void parsingExample(String filename) {
-        try {
-            Query query = QueryParser.parse(Paths.get(filename));
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				writer.flush();
+				writer.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	/**
+	 * Example method for getting started with the parser.
+	 * Reads CQ from a file and prints it to screen, then extracts Head and Body
+	 * from the query and prints them to screen.
+	 */
+
+	public static void parsingExample(String filename) {
+		try {
+			Query query = QueryParser.parse(Paths.get(filename));
 //            Query query = QueryParser.parse("Q(x, y) :- R(x, z), S(y, z, w), z < w");
 //            Query query = QueryParser.parse("Q(x, w) :- R(x, 'z'), S(4, z, w), 4 < 'test string' ");
 
-            System.out.println("Entire query: " + query);
-            RelationalAtom head = query.getHead();
-            System.out.println("Head: " + head);
-            List<Atom> body = query.getBody();
-            System.out.println("Body: " + body);
-        }
-        catch (Exception e)
-        {
-            System.err.println("Exception occurred during parsing");
-            e.printStackTrace();
-        }
-    }
+			System.out.println("Entire query: " + query);
+			RelationalAtom head = query.getHead();
+			System.out.println("Head: " + head);
+			List<Atom> body = query.getBody();
+			System.out.println("Body: " + body);
+		}
+		catch (Exception e)
+		{
+			System.err.println("Exception occurred during parsing");
+			e.printStackTrace();
+		}
+	}
 
 }
