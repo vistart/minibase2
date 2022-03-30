@@ -62,3 +62,82 @@ public class ScanOperator extends Operator {
 		}
 	}
 }
+
+
+
+
+///////实现2////////
+package ed.inf.adbs.minibase;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+public class ScanOperator extends Operator{
+
+
+    private String file;
+    ArrayList<Tuple> table;
+    int counter;
+    private BufferedReader reader = null;
+
+    public ScanOperator(String tableName) {
+
+//        String file = database_catalog.getInstance().getFileByTableName(tableName);
+//
+//        ArrayList<Tuple> table = database_catalog.getInstance().getTable(database_catalog.getInstance().
+//                getFileByTableName(tableName));
+        table = database_catalog.getInstance().getTable(database_catalog.getInstance().getFileByTableName(tableName));
+        counter = 0;
+//        this.file = file;
+//        try {
+//            this.reader = new BufferedReader(new FileReader(file));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+    }
+
+
+//    public static ArrayList<String> readQuery(String inputFile){
+//        ArrayList<String> output = new ArrayList<>();
+//        try{
+//            BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+//            String line;
+//            while ((line= reader.readLine()) != null){
+//                output.add(line);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return output;
+//    }
+
+
+    /**
+     * Get the next tuple of this operator
+     * @return next tuple, if available, otherwise return null
+     */
+    @Override
+    public Tuple getNextTuple() {
+        if (counter == table.size()){ //reset when reaches end of list
+            reset();
+            return null;
+        }
+        Tuple next = table.get(counter);
+        counter ++;
+        return next;
+    }
+
+    /**
+     * Reset the operator
+     */
+    @Override
+    public void reset() {
+        counter=0;
+    }
+//
+//    @Override
+//    public void dump
+}
