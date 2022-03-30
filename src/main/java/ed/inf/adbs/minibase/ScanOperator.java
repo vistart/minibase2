@@ -5,10 +5,7 @@ import ed.inf.adbs.minibase.base.Term;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 
 public class ScanOperator extends Operator {
@@ -30,13 +27,7 @@ public class ScanOperator extends Operator {
 	@Override
 	Tuple getNextTuple() {
 		if (scanner.hasNextLine()) {
-			String[] vals = scanner.nextLine().split(", ");
-			ArrayList<String> values = new ArrayList<String>();
-			for(int i=0; i<vals.length; i++) {
-				values.add(vals[i]);
-			}
-
-			return new Tuple(values, this.schemas, this.terms, this.references);
+			return new Tuple(new ArrayList<>(Arrays.asList(scanner.nextLine().split(", "))), this.schemas, this.terms, this.references);
 		}
 		return null;
 	}
@@ -52,8 +43,8 @@ public class ScanOperator extends Operator {
 	}
 
 	private void parseAtom(RelationalAtom atom) {
-		this.references = new HashMap<String,Integer>();
-		this.terms = new ArrayList<Term>();
+		this.references = new HashMap<>();
+		this.terms = new ArrayList<>();
 		List<Term> ts = atom.getTerms();
 		for(int i=0; i<ts.size(); i++) {
 			Term term = ts.get(i);

@@ -47,36 +47,3 @@ public class Tuple {
 		this.values.set(i, value);
 	}
 }
-
-
-
-//////Tuple 实现2///////////////
-package ed.inf.adbs.minibase;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-public class Tuple {
-
-    private List<String> list = new ArrayList<>();
-
-    public Tuple(String record) {list.addAll(Arrays.asList(record.split(",")));}
-
-    public Tuple(List<String> list) {
-        this.list = list;
-    }
-
-    public String toString(){
-        StringBuilder stringB = new StringBuilder();
-        for (String s: list){
-            stringB.append(s).append(",");
-        }
-        return stringB.substring(0, stringB.length()-1); // return full String from Stringbuilder
-    }
-    
-    public List<String> toList(){
-     return list;
-    }
-
-}
