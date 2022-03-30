@@ -9,19 +9,26 @@ import java.util.*;
 
 
 public class ScanOperator extends Operator {
-	private Catalog catalog;
-	private String relation;
+	private final Catalog catalog;
+	private final String relation;
 	private Scanner scanner;
-	private ArrayList<String> schemas;
-	private ArrayList<Term> terms;
-	private HashMap<String, Integer> references;
+	private final ArrayList<String> schemas;
+	private final ArrayList<Term> terms;
+	private final HashMap<String, Integer> references;
 
 	public ScanOperator(RelationalAtom atom, String dbDir) {
 		this.catalog = Catalog.getInstance(dbDir);
 		this.relation = atom.getName();
 		this.reset();
 		this.schemas = catalog.getSchemaMap().get(relation);
-		this.parseAtom(atom);
+		this.references = new HashMap<>();
+		this.terms = new ArrayList<>();
+		List<Term> t = atom.getTerms();
+		for (int i = 0; i < t.size(); i++) {
+			Term term = t.get(i);
+			this.terms.add(term);
+			references.put(term.toString(), i);
+		}
 	}
 
 	@Override
@@ -39,17 +46,6 @@ public class ScanOperator extends Operator {
 		}
 		catch(FileNotFoundException e) {
 			e.printStackTrace();
-		}
-	}
-
-	private void parseAtom(RelationalAtom atom) {
-		this.references = new HashMap<>();
-		this.terms = new ArrayList<>();
-		List<Term> ts = atom.getTerms();
-		for(int i=0; i<ts.size(); i++) {
-			Term term = ts.get(i);
-			this.terms.add(term);
-			references.put(term.toString(), i);
 		}
 	}
 }

@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Tuple {
-	private ArrayList<String> values;
-	private ArrayList<String> schemas;
-	private ArrayList<Term> terms;
-	private HashMap<String, Integer> references;
+	private final ArrayList<String> values;
+	private final ArrayList<String> schemas;
+	private final ArrayList<Term> terms;
+	private final HashMap<String, Integer> references;
 
 	public Tuple(ArrayList<String> values, ArrayList<String> schemas, ArrayList<Term> terms, HashMap<String, Integer> references)
 	{
