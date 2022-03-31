@@ -38,8 +38,8 @@ public class Minibase {
     		System.err.println("Exception occurred during parsing");
             e.printStackTrace();
     	}
-    	Interpreter interpreter = new Interpreter(query, databaseDir);
-    	ArrayList<Tuple> result = interpreter.getResult();
+    	Planner planner = new Planner(query, databaseDir);
+    	ArrayList<Tuple> result = planner.getResult();
     	saveCSV(result, outputFile);
     	
     }
