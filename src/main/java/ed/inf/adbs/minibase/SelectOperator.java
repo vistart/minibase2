@@ -1,11 +1,11 @@
 package ed.inf.adbs.minibase;
 
 import ed.inf.adbs.minibase.base.ComparisonAtom;
-import ed.inf.adbs.minibase.base.Constant;
-import ed.inf.adbs.minibase.base.Term;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class SelectOperator extends Operator {
@@ -48,13 +48,10 @@ public class SelectOperator extends Operator {
 	 */
 	private boolean checkConstantTerms(Tuple tuple) {
 		List<String> values = tuple.getValues();
-		List<Term> terms = tuple.getTerms();
-		for(int i=0; i<terms.size(); i++) {
-			Term term = terms.get(i);
-			if(term instanceof Constant) {
-				if(!term.toString().equals(values.get(i))) {
-					return false;
-				}
+		HashMap<String, Integer> refs = tuple.getRefs();
+		for (Map.Entry<String, Integer> entry : refs.entrySet()) {
+			if (entry.getKey() != null && !entry.getKey().equals(values.get(entry.getValue()))) {
+				return false;
 			}
 		}
 		return true;

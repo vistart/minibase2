@@ -14,27 +14,27 @@ public class ScanOperator extends Operator {
 	private Scanner scanner;
 	private final ArrayList<String> schemas;
 	private final ArrayList<Term> terms;
-	private final HashMap<String, Integer> references;
+	private final HashMap<String, Integer> refs;
 
 	public ScanOperator(RelationalAtom atom, String dbDir) {
 		this.catalog = Catalog.getInstance(dbDir);
 		this.relation = atom.getName();
 		this.reset();
 		this.schemas = catalog.getSchemaMap().get(relation);
-		this.references = new HashMap<>();
 		this.terms = new ArrayList<>();
 		List<Term> t = atom.getTerms();
+		this.refs = new HashMap<>();
 		for (int i = 0; i < t.size(); i++) {
 			Term term = t.get(i);
 			this.terms.add(term);
-			references.put(term.toString(), i);
+			this.refs.put(term.toString(), i);
 		}
 	}
 
 	@Override
 	Tuple getNextTuple() {
 		if (scanner.hasNextLine()) {
-			return new Tuple(new ArrayList<>(Arrays.asList(scanner.nextLine().split(", "))), this.schemas, this.terms, this.references);
+			return new Tuple(new ArrayList<>(Arrays.asList(scanner.nextLine().split(", "))), this.schemas, this.terms, this.refs);
 		}
 		return null;
 	}

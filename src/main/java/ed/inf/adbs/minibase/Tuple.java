@@ -9,14 +9,14 @@ public class Tuple {
 	private final ArrayList<String> values;
 	private final ArrayList<String> schemas;
 	private final ArrayList<Term> terms;
-	private final HashMap<String, Integer> references;
+	private final HashMap<String, Integer> refs;
 
-	public Tuple(ArrayList<String> values, ArrayList<String> schemas, ArrayList<Term> terms, HashMap<String, Integer> references)
+	public Tuple(ArrayList<String> values, ArrayList<String> schemas, ArrayList<Term> terms, HashMap<String, Integer> refs)
 	{
 		this.values = values;
 		this.schemas = schemas;
 		this.terms = terms;
-		this.references = references;
+		this.refs = refs;
 	}
 
 	public ArrayList<String> getValues() {
@@ -35,13 +35,11 @@ public class Tuple {
 		return this.schemas.get(i);
 	}
 
-	public HashMap<String, Integer> getReferences() {
-		return this.references;
-	}
-
 	public ArrayList<Term> getTerms() {
 		return this.terms;
 	}
+
+	public HashMap<String, Integer> getRefs() {return this.refs;}
 
 	public void setValueAt(int i, String value) {
 		this.values.set(i, value);

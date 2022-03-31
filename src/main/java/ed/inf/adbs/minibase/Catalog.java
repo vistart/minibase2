@@ -26,8 +26,8 @@ public class Catalog {
 	}
 
 	private Catalog(String path) {
-		schemaMap = this.constructSchemas(path + File.pathSeparator + "schema.txt");
-		nameMap = this.constructTables(path + File.pathSeparator + "files");
+		schemaMap = this.constructSchemas(path + File.separator + "schema.txt");
+		nameMap = this.constructTables(path + File.separator + "files");
 	}
 
 	private HashMap<String, ArrayList<String>> constructSchemas(String filePath)
@@ -56,7 +56,7 @@ public class Catalog {
 		for (String s : list) {
 			int f = s.indexOf(".csv");
 			if (f >= 0) {
-				map.put(s.substring(0, f), fileDirectory + File.pathSeparator + s);
+				map.put(s.substring(0, f), fileDirectory + File.separator + s);
 			}
 		}
 		return map;

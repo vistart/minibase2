@@ -25,30 +25,30 @@ public class ComparisonCheck {
 		String comparisonOp = condition.getOp().toString();
 		Term term1 = condition.getTerm1();
 		Term term2 = condition.getTerm2();
-		HashMap<String,Integer> varRef = tuple.getReferences();
+		HashMap<String,Integer> refs = tuple.getRefs();
 		//if the term of the condition not in this tuple, return true
-		if(!varRef.containsKey(term1.toString()) && !varRef.containsKey(term2.toString())) {
+		if(!refs.containsKey(term1.toString()) && !refs.containsKey(term2.toString())) {
 			return true;
 		}
 		boolean pass = false;
 		switch(comparisonOp) {
 			case "=":
-				pass = ComparisonCheck.equal(tuple, term1, term2, varRef);
+				pass = ComparisonCheck.equal(tuple, term1, term2, refs);
 				break;
 			case "!=":
-				pass = ComparisonCheck.notEqual(tuple, term1, term2, varRef);
+				pass = ComparisonCheck.notEqual(tuple, term1, term2, refs);
 				break;
 			case ">":
-				pass = ComparisonCheck.greaterThan(tuple, term1, term2, varRef);
+				pass = ComparisonCheck.greaterThan(tuple, term1, term2, refs);
 				break;
 			case ">=":
-				pass = ComparisonCheck.greaterEqual(tuple, term1, term2, varRef);
+				pass = ComparisonCheck.greaterEqual(tuple, term1, term2, refs);
 				break;
 			case "<":
-				pass = ComparisonCheck.lessThan(tuple, term1, term2, varRef);
+				pass = ComparisonCheck.lessThan(tuple, term1, term2, refs);
 				break;
 			case "<=":
-				pass = ComparisonCheck.lessEqual(tuple, term1, term2, varRef);
+				pass = ComparisonCheck.lessEqual(tuple, term1, term2, refs);
 				break;
 		}
 		return pass;
@@ -59,15 +59,15 @@ public class ComparisonCheck {
 	 * @param tuple  the tuple to check
 	 * @param term1  the left term in the comparison atom
 	 * @param term2  the right term in the comparison atom
-	 * @param varRef  the variable reference that record the corresponding position of the term in tuple
+	 * @param refs  the variable reference that record the corresponding position of the term in tuple
 	 * @return true if the tuple data in position term1 is equal to the tuple data in position term2, false if not equal
 	 */
-	public static boolean equal(Tuple tuple, Term term1, Term term2, HashMap<String,Integer> varRef) {
+	public static boolean equal(Tuple tuple, Term term1, Term term2, HashMap<String,Integer> refs) {
 		if(term1 instanceof Variable) {
-			int pos1 = varRef.get(term1.toString());
+			int pos1 = refs.get(term1.toString());
 			String value1 = tuple.getValueAt(pos1);
 			if(term2 instanceof Variable) {
-				int pos2 = varRef.get(term2.toString());
+				int pos2 = refs.get(term2.toString());
 				String value2 = tuple.getValueAt(pos2);
 				String valType = tuple.getSchemaAt(pos1);
 				if(valType.equals("string")) {
@@ -101,15 +101,15 @@ public class ComparisonCheck {
 	 * @param tuple  the tuple to check
 	 * @param term1  the left term in the comparison atom
 	 * @param term2  the right term in the comparison atom
-	 * @param varRef  the variable reference that record the corresponding position of the term in tuple
+	 * @param refs  the variable reference that record the corresponding position of the term in tuple
 	 * @return true if the tuple data in position term1 is not equal to the tuple data in position term2, false if equal
 	 */
-	public static boolean notEqual(Tuple tuple, Term term1, Term term2, HashMap<String,Integer> varRef) {
+	public static boolean notEqual(Tuple tuple, Term term1, Term term2, HashMap<String,Integer> refs) {
 		if(term1 instanceof Variable) {
-			int pos1 = varRef.get(term1.toString());
+			int pos1 = refs.get(term1.toString());
 			String value1 = tuple.getValueAt(pos1);
 			if(term2 instanceof Variable) {
-				int pos2 = varRef.get(term2.toString());
+				int pos2 = refs.get(term2.toString());
 				String value2 = tuple.getValueAt(pos2);
 				String valType = tuple.getSchemaAt(pos1);
 				if(valType.equals("string")) {
@@ -142,15 +142,15 @@ public class ComparisonCheck {
 	 * @param tuple  the tuple to check
 	 * @param term1  the left term in the comparison atom
 	 * @param term2  the right term in the comparison atom
-	 * @param varRef  the variable reference that record the corresponding position of the term in tuple
+	 * @param refs  the variable reference that record the corresponding position of the term in tuple
 	 * @return true if the tuple data in position term1 is greater than the tuple data in position term2, false if not
 	 */
-	public static boolean greaterThan(Tuple tuple, Term term1, Term term2, HashMap<String,Integer> varRef) {
+	public static boolean greaterThan(Tuple tuple, Term term1, Term term2, HashMap<String,Integer> refs) {
 		if(term1 instanceof Variable) {
-			int pos1 = varRef.get(term1.toString());
+			int pos1 = refs.get(term1.toString());
 			String value1 = tuple.getValueAt(pos1);
 			if(term2 instanceof Variable) {
-				int pos2 = varRef.get(term2.toString());
+				int pos2 = refs.get(term2.toString());
 				String value2 = tuple.getValueAt(pos2);
 				String valType = tuple.getSchemaAt(pos1);
 				if(valType.equals("string")) {
@@ -183,15 +183,15 @@ public class ComparisonCheck {
 	 * @param tuple  the tuple to check
 	 * @param term1  the left term in the comparison atom
 	 * @param term2  the right term in the comparison atom
-	 * @param varRef  the variable reference that record the corresponding position of the term in tuple
+	 * @param refs  the variable reference that record the corresponding position of the term in tuple
 	 * @return true if the tuple data in position term1 is greater than or equal to the tuple data in position term2, false if not
 	 */
-	public static boolean greaterEqual(Tuple tuple, Term term1, Term term2, HashMap<String,Integer> varRef) {
+	public static boolean greaterEqual(Tuple tuple, Term term1, Term term2, HashMap<String,Integer> refs) {
 		if(term1 instanceof Variable) {
-			int pos1 = varRef.get(term1.toString());
+			int pos1 = refs.get(term1.toString());
 			String value1 = tuple.getValueAt(pos1);
 			if(term2 instanceof Variable) {
-				int pos2 = varRef.get(term2.toString());
+				int pos2 = refs.get(term2.toString());
 				String value2 = tuple.getValueAt(pos2);
 				String valType = tuple.getSchemaAt(pos1);
 				if(valType.equals("string")) {
@@ -224,15 +224,15 @@ public class ComparisonCheck {
 	 * @param tuple  the tuple to check
 	 * @param term1  the left term in the comparison atom
 	 * @param term2  the right term in the comparison atom
-	 * @param varRef  the variable reference that record the corresponding position of the term in tuple
+	 * @param refs  the variable reference that record the corresponding position of the term in tuple
 	 * @return true if the tuple data in position term1 is less than the tuple data in position term2, false if not
 	 */
-	public static boolean lessThan(Tuple tuple, Term term1, Term term2, HashMap<String,Integer> varRef) {
+	public static boolean lessThan(Tuple tuple, Term term1, Term term2, HashMap<String,Integer> refs) {
 		if(term1 instanceof Variable) {
-			int pos1 = varRef.get(term1.toString());
+			int pos1 = refs.get(term1.toString());
 			String value1 = tuple.getValueAt(pos1);
 			if(term2 instanceof Variable) {
-				int pos2 = varRef.get(term2.toString());
+				int pos2 = refs.get(term2.toString());
 				String value2 = tuple.getValueAt(pos2);
 				String valType = tuple.getSchemaAt(pos1);
 				if(valType.equals("string")) {
@@ -265,15 +265,15 @@ public class ComparisonCheck {
 	 * @param tuple  the tuple to check
 	 * @param term1  the left term in the comparison atom
 	 * @param term2  the right term in the comparison atom
-	 * @param varRef  the variable reference that record the corresponding position of the term in tuple
+	 * @param refs  the variable reference that record the corresponding position of the term in tuple
 	 * @return true if the tuple data in position term1 is less than or equal to the tuple data in position term2, false if not
 	 */
-	public static boolean lessEqual(Tuple tuple, Term term1, Term term2, HashMap<String,Integer> varRef) {
+	public static boolean lessEqual(Tuple tuple, Term term1, Term term2, HashMap<String,Integer> refs) {
 		if(term1 instanceof Variable) {
-			int pos1 = varRef.get(term1.toString());
+			int pos1 = refs.get(term1.toString());
 			String value1 = tuple.getValueAt(pos1);
 			if(term2 instanceof Variable) {
-				int pos2 = varRef.get(term2.toString());
+				int pos2 = refs.get(term2.toString());
 				String value2 = tuple.getValueAt(pos2);
 				String valType = tuple.getSchemaAt(pos1);
 				if(valType.equals("string")) {

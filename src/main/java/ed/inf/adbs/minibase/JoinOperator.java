@@ -61,7 +61,7 @@ public class JoinOperator extends Operator {
 		ArrayList<String> newValues = new ArrayList<String>();
 		ArrayList<String> newSchema = new ArrayList<String>();
 		ArrayList<Term> newTerms = new ArrayList<Term>();
-		HashMap<String, Integer> newVarRef = new HashMap<String, Integer>();
+		HashMap<String, Integer> newRefs = new HashMap<>();
 		
 		ArrayList<String> values1 = tuple1.getValues();
 		ArrayList<String> schema1 = tuple1.getSchemas();
@@ -75,7 +75,7 @@ public class JoinOperator extends Operator {
 			newValues.add(values1.get(i));
 			newSchema.add(schema1.get(i));
 			newTerms.add(terms1.get(i));
-			newVarRef.put(terms1.get(i).toString(), i);
+			newRefs.put(terms1.get(i).toString(), i);
 			newTupleSize++;
 		}
 		for(int i=0; i<values2.size(); i++) {
@@ -83,8 +83,8 @@ public class JoinOperator extends Operator {
 			Term term2 = terms2.get(i);
 			
 			if(term2 instanceof Variable) {
-				if(newVarRef.containsKey(term2.toString())) {
-					String newVal = newValues.get(newVarRef.get(term2.toString()));
+				if(newRefs.containsKey(term2)) {
+					String newVal = newValues.get(newRefs.get(term2));
 					newTupleSize--;
 					if(!newVal.equals(val2)) {
 						return null;
@@ -95,7 +95,7 @@ public class JoinOperator extends Operator {
 					newValues.add(values2.get(i));
 					newSchema.add(schema2.get(i));
 					newTerms.add(terms2.get(i));
-					newVarRef.put(terms2.get(i).toString(), newTupleSize+i);
+					newRefs.put(terms2.get(i).toString(), newTupleSize+i);
 				}
 			}
 			else {
@@ -103,10 +103,10 @@ public class JoinOperator extends Operator {
 				newValues.add(values2.get(i));
 				newSchema.add(schema2.get(i));
 				newTerms.add(terms2.get(i));
-				newVarRef.put(terms2.get(i).toString(), newTupleSize+i);
+				newRefs.put(terms2.get(i).toString(), newTupleSize+i);
 			}
 		}
-		return new Tuple(newValues, newSchema, newTerms, newVarRef);
+		return new Tuple(newValues, newSchema, newTerms, newRefs);
 	}
 
 	@Override

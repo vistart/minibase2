@@ -36,7 +36,7 @@ public class SumOperator extends Operator {
 			}
 
 			int sum = 0;
-			HashMap<String, Integer> varRef = tuple1.getReferences();
+			HashMap<String, Integer> varRef = tuple1.getRefs();
 			for(int i=0; i<group.size(); i++) {
 				int val = Integer.parseInt(group.get(i).getValueAt(varRef.get(sumVar)));
 				sum += val;
@@ -55,7 +55,7 @@ public class SumOperator extends Operator {
 	 * @return true if tuple1 and tuple2 are in the same group
 	 */
 	private boolean sameGroup(Tuple tuple1, Tuple tuple2, String sumVar) {
-		int sumVarPos = tuple1.getReferences().get(sumVar);
+		int sumVarPos = tuple1.getRefs().get(sumVar);
 		for(int i=0; i<tuple1.getValues().size(); i++) {
 			if(i==sumVarPos) {
 				continue;

@@ -5,11 +5,10 @@ import ed.inf.adbs.minibase.base.Term;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class ProjectOperator extends Operator {
-	private Operator childOperator;
-	private ArrayList<String> projectVar;
+	private final Operator childOperator;
+	private ArrayList<Term> projectVar;
 	
 	public ProjectOperator(Operator childOperator, RelationalAtom headAtom) {
 		this.childOperator = childOperator;
@@ -33,21 +32,22 @@ public class ProjectOperator extends Operator {
 		ArrayList<String> newValues = new ArrayList<String>();
 		ArrayList<String> newSchema = new ArrayList<String>();
 		ArrayList<Term> newTerms = new ArrayList<Term>();
-		HashMap<String, Integer> newVarRef = new HashMap<String, Integer>();
+		HashMap<String, Integer> newRefs = new HashMap<>();
 		
 		ArrayList<String> values = tuple.getValues();
 		ArrayList<String> schema = tuple.getSchemas();
 		ArrayList<Term> terms = tuple.getTerms();
-		HashMap<String, Integer> varRef = tuple.getReferences();
+		HashMap<String, Integer> refs = tuple.getRefs();
 		for(int i=0; i<this.projectVar.size(); i++) {
-			int pos = varRef.get(projectVar.get(i));
+			Term t = projectVar.get(i);
+			int pos = refs.get(t.toString());
 			newValues.add(values.get(pos));
 			newSchema.add(schema.get(pos));
 			newTerms.add(terms.get(pos));
-			newVarRef.put(terms.get(pos).toString(), i);
+			newRefs.put(terms.get(pos).toString(), i);
 		}
 		
-		return new Tuple(newValues, newSchema, newTerms, newVarRef);
+		return new Tuple(newValues, newSchema, newTerms, newRefs);
 	}
 	
 	/***
@@ -55,13 +55,8 @@ public class ProjectOperator extends Operator {
 	 * @param atom The query head
 	 * @return an ArrayList<String> that contains the variable name of the head
 	 */
-	private ArrayList<String> getProjectionVar(RelationalAtom atom) {
-		ArrayList<String> l = new ArrayList<String>();
-		List<Term> terms = atom.getTerms();
-		for(int i=0; i<terms.size(); i++) {
-			l.add(terms.get(i).toString());
-		}
-		return l;
+	private ArrayList<Term> getProjectionVar(RelationalAtom atom) {
+		return new ArrayList<>(atom.getTerms());
 	}
 
 	@Override
