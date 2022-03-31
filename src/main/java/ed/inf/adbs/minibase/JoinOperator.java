@@ -8,16 +8,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class JoinOperator extends Operator {
-	private Operator leftChildOP;
-	private Operator rightChildOP;
-	private ArrayList<ComparisonAtom> conditions;
+	private final Operator left;
+	private final Operator right;
+	private final ArrayList<ComparisonAtom> conditions;
 	private Tuple leftTuple;
 	
 	public JoinOperator(Operator leftChildOP, Operator rightChildOP, ArrayList<ComparisonAtom> conditions) {
-		this.leftChildOP = leftChildOP;
-		this.rightChildOP = rightChildOP;
+		this.left = leftChildOP;
+		this.right = rightChildOP;
 		this.conditions = conditions;
-		this.leftTuple = this.leftChildOP.getNextTuple();
+		this.leftTuple = this.left.getNextTuple();
 	}
 	
 	@Override
@@ -25,13 +25,13 @@ public class JoinOperator extends Operator {
 		if(leftTuple == null) {
 			return null;
 		}
-		Tuple rightTuple = rightChildOP.getNextTuple();
+		Tuple rightTuple = right.getNextTuple();
 		while(rightTuple != null) {
 			Tuple mergedTuple = this.tryMergeTuple(leftTuple, rightTuple);
 			if(mergedTuple != null) {
 				boolean pass = true;
-				for(int i=0; i<conditions.size(); i++) {
-					if(!Compare.checkCondition(mergedTuple, conditions.get(i))) {
+				for (ComparisonAtom condition : conditions) {
+					if (!Compare.checkCondition(mergedTuple, condition)) {
 						pass = false;
 					}
 				}
@@ -39,29 +39,25 @@ public class JoinOperator extends Operator {
 					return mergedTuple;
 				}
 			}
-			rightTuple = rightChildOP.getNextTuple();
+			rightTuple = right.getNextTuple();
 		}
-		leftTuple = leftChildOP.getNextTuple();
+		leftTuple = left.getNextTuple();
 		if(leftTuple!=null) {
-			rightChildOP.reset();
+			right.reset();
 			return this.getNextTuple();
 		}
 		return null;
 	}
 	
 	/***
-	 * Merge two tuples, if they have same variable name, then check the corresponding value of that variable of two tuples.
-	 * if the values are different, then tuple1 and tuple2 can not be merged
-	 * @param tuple1
-	 * @param tuple2
-	 * @return null if tuple1 and tuple2 can not be merged,  return a new tuple if tuple1 and tuple2 can merge
+	 * Try to merge two tuples.
+	 * @param tuple1 tuple to be merged.
+	 * @param tuple2 another tuple to be merged.
+	 * @return null if two tuples are not allowed to be merged, or a new tuple merged two tuples.
 	 */
 	private Tuple tryMergeTuple(Tuple tuple1, Tuple tuple2) {
-		int newTupleSize = 0;
-		ArrayList<String> newValues = new ArrayList<String>();
-		ArrayList<String> newSchema = new ArrayList<String>();
-		ArrayList<Term> newTerms = new ArrayList<Term>();
-		HashMap<String, Integer> newVarRef = new HashMap<String, Integer>();
+		int size = 0;
+		HashMap<String, Integer> refs = new HashMap<>();
 		
 		ArrayList<String> values1 = tuple1.getValues();
 		ArrayList<String> schema1 = tuple1.getSchemas();
@@ -70,49 +66,40 @@ public class JoinOperator extends Operator {
 		ArrayList<String> values2 = tuple2.getValues();
 		ArrayList<String> schema2 = tuple2.getSchemas();
 		ArrayList<Term> terms2 = tuple2.getTerms();
-		
-		for(int i=0; i<values1.size(); i++) {
-			newValues.add(values1.get(i));
-			newSchema.add(schema1.get(i));
-			newTerms.add(terms1.get(i));
-			newVarRef.put(terms1.get(i).toString(), i);
-			newTupleSize++;
+
+		ArrayList<String> values = new ArrayList<>(values1);
+		ArrayList<String> schemas = new ArrayList<>(schema1);
+		ArrayList<Term> terms = new ArrayList<>(terms1);
+
+		for(int i = 0; i < values1.size(); i++) {
+			refs.put(terms1.get(i).toString(), i);
+			size++;
 		}
-		for(int i=0; i<values2.size(); i++) {
+		for(int i = 0; i < values2.size(); i++) {
 			String val2 = values2.get(i);
 			Term term2 = terms2.get(i);
 			
-			if(term2 instanceof Variable) {
-				if(newVarRef.containsKey(term2.toString())) {
-					String newVal = newValues.get(newVarRef.get(term2.toString()));
-					newTupleSize--;
+			if(term2 instanceof Variable && refs.containsKey(term2.toString())) {
+					String newVal = values.get(refs.get(term2.toString()));
+					size--;
 					if(!newVal.equals(val2)) {
 						return null;
 					}
-				}
-				else {
-
-					newValues.add(values2.get(i));
-					newSchema.add(schema2.get(i));
-					newTerms.add(terms2.get(i));
-					newVarRef.put(terms2.get(i).toString(), newTupleSize+i);
-				}
 			}
 			else {
-
-				newValues.add(values2.get(i));
-				newSchema.add(schema2.get(i));
-				newTerms.add(terms2.get(i));
-				newVarRef.put(terms2.get(i).toString(), newTupleSize+i);
+				values.add(values2.get(i));
+				schemas.add(schema2.get(i));
+				terms.add(terms2.get(i));
+				refs.put(terms2.get(i).toString(), size + i);
 			}
 		}
-		return new Tuple(newValues, newSchema, newTerms, newVarRef);
+		return new Tuple(values, schemas, terms, refs);
 	}
 
 	@Override
 	void reset() {
-		this.leftChildOP.reset();
-		this.rightChildOP.reset();
+		this.left.reset();
+		this.right.reset();
 	}
 
 }

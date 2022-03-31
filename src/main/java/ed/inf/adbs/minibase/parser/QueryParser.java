@@ -49,29 +49,6 @@ public class QueryParser {
                     .stream()
                     .map(a -> a.accept(atomVisitor))
                     .collect(toList());
-
-            //
-            // TODO: construct SUM & AVG aggregate atoms
-            //
-
-            // Check if SUM exists
-            if (ctx.head().sumagg() != null) {
-                // Do something with this aggregate
-            	Variable sumVar = new Variable(ctx.head().sumagg().variable().getText());
-            	headVariables.add(sumVar);
-            	body.add(new SumAtom(sumVar));
-                System.err.println("SUM variable name: " + ctx.head().sumagg().variable().getText());
-            }
-
-            // Check if AVG exists
-            if (ctx.head().avgagg() != null) {
-                // Do something with this aggregate
-            	Variable avgVar = new Variable(ctx.head().avgagg().variable().getText());
-            	headVariables.add(avgVar);
-            	body.add(new AverageAtom(avgVar));
-                System.err.println("AVG variable name: " + ctx.head().avgagg().variable().getText());
-            }
-
             return new Query(head, body);
         }
     }
