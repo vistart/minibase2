@@ -1,11 +1,11 @@
 package ed.inf.adbs.minibase;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import ed.inf.adbs.minibase.base.ComparisonAtom;
 import ed.inf.adbs.minibase.base.Term;
 import ed.inf.adbs.minibase.base.Variable;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 public class JoinOperator extends Operator {
 	private Operator leftChildOP;
@@ -61,21 +61,21 @@ public class JoinOperator extends Operator {
 		ArrayList<String> newValues = new ArrayList<String>();
 		ArrayList<String> newSchema = new ArrayList<String>();
 		ArrayList<Term> newTerms = new ArrayList<Term>();
-		HashMap<String, Integer> newRefs = new HashMap<>();
+		HashMap<String, Integer> newVarRef = new HashMap<String, Integer>();
 		
 		ArrayList<String> values1 = tuple1.getValues();
-		ArrayList<String> schema1 = tuple1.getSchemas();
+		ArrayList<String> schema1 = tuple1.getSchema();
 		ArrayList<Term> terms1 = tuple1.getTerms();
 		
 		ArrayList<String> values2 = tuple2.getValues();
-		ArrayList<String> schema2 = tuple2.getSchemas();
+		ArrayList<String> schema2 = tuple2.getSchema();
 		ArrayList<Term> terms2 = tuple2.getTerms();
 		
 		for(int i=0; i<values1.size(); i++) {
 			newValues.add(values1.get(i));
 			newSchema.add(schema1.get(i));
 			newTerms.add(terms1.get(i));
-			newRefs.put(terms1.get(i).toString(), i);
+			newVarRef.put(terms1.get(i).toString(), i);
 			newTupleSize++;
 		}
 		for(int i=0; i<values2.size(); i++) {
@@ -83,8 +83,8 @@ public class JoinOperator extends Operator {
 			Term term2 = terms2.get(i);
 			
 			if(term2 instanceof Variable) {
-				if(newRefs.containsKey(term2)) {
-					String newVal = newValues.get(newRefs.get(term2));
+				if(newVarRef.containsKey(term2.toString())) {
+					String newVal = newValues.get(newVarRef.get(term2.toString()));
 					newTupleSize--;
 					if(!newVal.equals(val2)) {
 						return null;
@@ -95,7 +95,7 @@ public class JoinOperator extends Operator {
 					newValues.add(values2.get(i));
 					newSchema.add(schema2.get(i));
 					newTerms.add(terms2.get(i));
-					newRefs.put(terms2.get(i).toString(), newTupleSize+i);
+					newVarRef.put(terms2.get(i).toString(), newTupleSize+i);
 				}
 			}
 			else {
@@ -103,10 +103,10 @@ public class JoinOperator extends Operator {
 				newValues.add(values2.get(i));
 				newSchema.add(schema2.get(i));
 				newTerms.add(terms2.get(i));
-				newRefs.put(terms2.get(i).toString(), newTupleSize+i);
+				newVarRef.put(terms2.get(i).toString(), newTupleSize+i);
 			}
 		}
-		return new Tuple(newValues, newSchema, newTerms, newRefs);
+		return new Tuple(newValues, newSchema, newTerms, newVarRef);
 	}
 
 	@Override

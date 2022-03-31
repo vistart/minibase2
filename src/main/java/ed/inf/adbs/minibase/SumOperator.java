@@ -3,6 +3,8 @@ package ed.inf.adbs.minibase;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import ed.inf.adbs.minibase.base.Term;
+
 public class SumOperator extends Operator {
 	private Operator childOperator;
 	private ArrayList<Tuple> allTuples = new ArrayList<Tuple>();
@@ -36,14 +38,14 @@ public class SumOperator extends Operator {
 			}
 
 			int sum = 0;
-			HashMap<String, Integer> varRef = tuple1.getRefs();
+			HashMap<String, Integer> varRef = tuple1.getVariableRefernce();
 			for(int i=0; i<group.size(); i++) {
 				int val = Integer.parseInt(group.get(i).getValueAt(varRef.get(sumVar)));
 				sum += val;
 			}
 			ArrayList<String> newValues = tuple1.getValues();
 			newValues.set(varRef.get(sumVar), String.valueOf(sum));
-			this.tupleGroupSum.add(new Tuple(newValues, tuple1.getSchemas(), tuple1.getTerms(), varRef));
+			this.tupleGroupSum.add(new Tuple(newValues, tuple1.getSchema(), tuple1.getTerms(), varRef));
 		}
 	}
 	
@@ -55,7 +57,7 @@ public class SumOperator extends Operator {
 	 * @return true if tuple1 and tuple2 are in the same group
 	 */
 	private boolean sameGroup(Tuple tuple1, Tuple tuple2, String sumVar) {
-		int sumVarPos = tuple1.getRefs().get(sumVar);
+		int sumVarPos = tuple1.getVariableRefernce().get(sumVar);
 		for(int i=0; i<tuple1.getValues().size(); i++) {
 			if(i==sumVarPos) {
 				continue;

@@ -1,24 +1,25 @@
 package ed.inf.adbs.minibase;
 
-import ed.inf.adbs.minibase.base.ComparisonAtom;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+
+import ed.inf.adbs.minibase.base.ComparisonAtom;
+import ed.inf.adbs.minibase.base.Constant;
+import ed.inf.adbs.minibase.base.Term;
 
 
 public class SelectOperator extends Operator {
-	private Operator child;
+	private Operator childOperator;
 	private ArrayList<ComparisonAtom> conditions;
 	
-	public SelectOperator(Operator child, ArrayList<ComparisonAtom> conditions) {
-		this.child = child;
+	public SelectOperator(Operator childOperator, ArrayList<ComparisonAtom> conditions) {
+		this.childOperator = childOperator;
 		this.conditions = conditions;
 	}
 	@Override
 	Tuple getNextTuple() {
-		Tuple tuple = child.getNextTuple();
+		Tuple tuple = childOperator.getNextTuple();
 		while(tuple != null) {
 			boolean pass = true;
 			if(!this.checkConstantTerms(tuple)) {
@@ -32,14 +33,14 @@ public class SelectOperator extends Operator {
 			if(pass) {
 				return tuple;
 			}
-			tuple = child.getNextTuple();
+			tuple = childOperator.getNextTuple();
 		}
 		return null;
 	}
 
 	@Override
 	void reset() {
-		child.reset();
+		childOperator.reset();
 	}
 	/***
 	 * if the atom has constant term, check if the tuple match
@@ -48,10 +49,13 @@ public class SelectOperator extends Operator {
 	 */
 	private boolean checkConstantTerms(Tuple tuple) {
 		List<String> values = tuple.getValues();
-		HashMap<String, Integer> refs = tuple.getRefs();
-		for (Map.Entry<String, Integer> entry : refs.entrySet()) {
-			if (entry.getKey() != null && !entry.getKey().equals(values.get(entry.getValue()))) {
-				return false;
+		List<Term> terms = tuple.getTerms();
+		for(int i=0; i<terms.size(); i++) {
+			Term term = terms.get(i);
+			if(term instanceof Constant) {
+				if(!term.toString().equals(values.get(i))) {
+					return false;
+				}
 			}
 		}
 		return true;

@@ -1,47 +1,46 @@
 package ed.inf.adbs.minibase;
 
-import ed.inf.adbs.minibase.base.Term;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import ed.inf.adbs.minibase.base.Term;
+
 public class Tuple {
-	private final ArrayList<String> values;
-	private final ArrayList<String> schemas;
-	private final ArrayList<Term> terms;
-	private final HashMap<String, Integer> refs;
-
-	public Tuple(ArrayList<String> values, ArrayList<String> schemas, ArrayList<Term> terms, HashMap<String, Integer> refs)
-	{
+	private ArrayList<String> values;
+	private ArrayList<String> schema;
+	private ArrayList<Term> terms;
+	private HashMap<String, Integer> varRef;
+	public Tuple(ArrayList<String> values, ArrayList<String> schema, ArrayList<Term> terms, HashMap<String,Integer> varRef) {
 		this.values = values;
-		this.schemas = schemas;
+		this.schema = schema;
+		this.varRef = varRef;
 		this.terms = terms;
-		this.refs = refs;
 	}
-
-	public ArrayList<String> getValues() {
+	public ArrayList<String> getValues(){
 		return this.values;
 	}
-
+	
 	public String getValueAt(int i) {
 		return this.values.get(i);
 	}
-
-	public ArrayList<String> getSchemas() {
-		return this.schemas;
+	
+	public ArrayList<String> getSchema() {
+		return this.schema;
 	}
-
-	public String getSchemaAt(int i){
-		return this.schemas.get(i);
+	
+	public String getSchemaAt(int i) {
+		return this.schema.get(i);
 	}
-
-	public ArrayList<Term> getTerms() {
+	
+	public HashMap<String,Integer> getVariableRefernce(){
+		return this.varRef;
+	}
+	
+	public ArrayList<Term> getTerms(){
 		return this.terms;
 	}
-
-	public HashMap<String, Integer> getRefs() {return this.refs;}
-
-	public void setValueAt(int i, String value) {
-		this.values.set(i, value);
+	
+	public void setValAt(int i, String val) {
+		this.values.set(i, val);
 	}
 }

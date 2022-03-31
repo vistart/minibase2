@@ -36,15 +36,15 @@ public class AvgOperator extends Operator {
 			}
 
 			int sum = 0;
-			HashMap<String, Integer> refs = tuple1.getRefs();
+			HashMap<String, Integer> varRef = tuple1.getVariableRefernce();
 			for(int i=0; i<group.size(); i++) {
-				int val = Integer.parseInt(group.get(i).getValueAt(refs.get(sumVar)));
+				int val = Integer.parseInt(group.get(i).getValueAt(varRef.get(sumVar)));
 				sum += val;
 			}
 			sum = sum/group.size();
 			ArrayList<String> newValues = tuple1.getValues();
-			newValues.set(refs.get(sumVar), String.valueOf(sum));
-			this.tupleGroupAvg.add(new Tuple(newValues, tuple1.getSchemas(), tuple1.getTerms(), refs));
+			newValues.set(varRef.get(sumVar), String.valueOf(sum));
+			this.tupleGroupAvg.add(new Tuple(newValues, tuple1.getSchema(), tuple1.getTerms(), varRef));
 		}
 		
 		
@@ -57,7 +57,7 @@ public class AvgOperator extends Operator {
 	 * @return true if tuple1 and tuple2 are in the same group
 	 */
 	private boolean sameGroup(Tuple tuple1, Tuple tuple2, String sumVar) {
-		int sumVarPos = tuple1.getRefs().get(sumVar);
+		int sumVarPos = tuple1.getVariableRefernce().get(sumVar);
 		for(int i=0; i<tuple1.getValues().size(); i++) {
 			if(i==sumVarPos) {
 				continue;

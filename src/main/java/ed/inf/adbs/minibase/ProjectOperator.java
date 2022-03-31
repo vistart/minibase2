@@ -1,14 +1,15 @@
 package ed.inf.adbs.minibase;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import ed.inf.adbs.minibase.base.RelationalAtom;
 import ed.inf.adbs.minibase.base.Term;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 public class ProjectOperator extends Operator {
-	private final Operator childOperator;
-	private ArrayList<Term> projectVar;
+	private Operator childOperator;
+	private ArrayList<String> projectVar;
 	
 	public ProjectOperator(Operator childOperator, RelationalAtom headAtom) {
 		this.childOperator = childOperator;
@@ -32,22 +33,21 @@ public class ProjectOperator extends Operator {
 		ArrayList<String> newValues = new ArrayList<String>();
 		ArrayList<String> newSchema = new ArrayList<String>();
 		ArrayList<Term> newTerms = new ArrayList<Term>();
-		HashMap<String, Integer> newRefs = new HashMap<>();
+		HashMap<String, Integer> newVarRef = new HashMap<String, Integer>();
 		
 		ArrayList<String> values = tuple.getValues();
-		ArrayList<String> schema = tuple.getSchemas();
+		ArrayList<String> schema = tuple.getSchema();
 		ArrayList<Term> terms = tuple.getTerms();
-		HashMap<String, Integer> refs = tuple.getRefs();
+		HashMap<String, Integer> varRef = tuple.getVariableRefernce();
 		for(int i=0; i<this.projectVar.size(); i++) {
-			Term t = projectVar.get(i);
-			int pos = refs.get(t.toString());
+			int pos = varRef.get(projectVar.get(i));
 			newValues.add(values.get(pos));
 			newSchema.add(schema.get(pos));
 			newTerms.add(terms.get(pos));
-			newRefs.put(terms.get(pos).toString(), i);
+			newVarRef.put(terms.get(pos).toString(), i);
 		}
 		
-		return new Tuple(newValues, newSchema, newTerms, newRefs);
+		return new Tuple(newValues, newSchema, newTerms, newVarRef);
 	}
 	
 	/***
@@ -55,8 +55,13 @@ public class ProjectOperator extends Operator {
 	 * @param atom The query head
 	 * @return an ArrayList<String> that contains the variable name of the head
 	 */
-	private ArrayList<Term> getProjectionVar(RelationalAtom atom) {
-		return new ArrayList<>(atom.getTerms());
+	private ArrayList<String> getProjectionVar(RelationalAtom atom) {
+		ArrayList<String> l = new ArrayList<String>();
+		List<Term> terms = atom.getTerms();
+		for(int i=0; i<terms.size(); i++) {
+			l.add(terms.get(i).toString());
+		}
+		return l;
 	}
 
 	@Override
