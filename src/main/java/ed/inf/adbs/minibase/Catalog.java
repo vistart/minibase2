@@ -30,6 +30,11 @@ public class Catalog {
 		nameMap = this.constructTables(path + File.separator + "files");
 	}
 
+	/**
+	 * Construct Schema Map according to the specified file.
+	 * @param filePath the file which store the schemas.
+	 * @return Schema Map
+	 */
 	private HashMap<String, ArrayList<String>> constructSchemas(String filePath)
 	{
 		HashMap<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
@@ -47,6 +52,11 @@ public class Catalog {
 		return map;
 	}
 
+	/**
+	 * Construct Table Map according to the specified files.
+	 * @param fileDirectory the directory of files which store the tables.
+	 * @return Table Map
+	 */
 	private HashMap<String, String> constructTables(String fileDirectory)
 	{
 		HashMap<String, String> map = new HashMap<String, String>();

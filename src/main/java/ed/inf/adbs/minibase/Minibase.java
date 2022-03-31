@@ -1,20 +1,12 @@
 package ed.inf.adbs.minibase;
 
 import ed.inf.adbs.minibase.base.Atom;
-import ed.inf.adbs.minibase.base.ComparisonAtom;
 import ed.inf.adbs.minibase.base.Query;
 import ed.inf.adbs.minibase.base.RelationalAtom;
-import ed.inf.adbs.minibase.base.Term;
-import ed.inf.adbs.minibase.base.Variable;
 import ed.inf.adbs.minibase.parser.QueryParser;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,19 +18,14 @@ import java.util.List;
 public class Minibase {
 
     public static void main(String[] args) {
-
         if (args.length != 3) {
             System.err.println("Usage: Minibase database_dir input_file output_file");
             return;
         }
-
         String databaseDir = args[0];
         String inputFile = args[1];
         String outputFile = args[2];
-
         evaluateCQ(databaseDir, inputFile, outputFile);
-
-//        parsingExample(inputFile);
     }
 
     public static void evaluateCQ(String databaseDir, String inputFile, String outputFile) {
@@ -53,37 +40,8 @@ public class Minibase {
     	}
     	Interpreter interpreter = new Interpreter(query, databaseDir);
     	ArrayList<Tuple> result = interpreter.getResult();
-    	removeDuplicate(result);
     	saveCSV(result, outputFile);
     	
-    }
-    /***
-     * given a list of tuples, remove the duplicates
-     * @param tuples
-     */
-    private static void removeDuplicate(ArrayList<Tuple> tuples) {
-    	for(int i=0; i<tuples.size(); i++) {
-    		for(int j=i+1; j<tuples.size(); j++) {
-    			if(sameTuples(tuples.get(i), tuples.get(j))) {
-    				tuples.remove(j);
-    				j--;
-    			}
-    		}
-    	}
-    }
-    /***
-     * check if tuple1 and tuple2 have the same value
-     * @param tuple1 
-     * @param tuple2
-     * @return true if tuple1 and tuple2 have same values, false if not
-     */
-    private static boolean sameTuples(Tuple tuple1, Tuple tuple2) {
-    	for(int i=0; i<tuple1.getValues().size(); i++) {
-    		if(!tuple1.getValueAt(i).equals(tuple2.getValueAt(i))) {
-    			return false;
-    		}
-    	}
-    	return true;
     }
     /***
      * save a list of tuples to a csv file
