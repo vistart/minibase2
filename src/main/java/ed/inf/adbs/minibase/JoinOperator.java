@@ -1,11 +1,11 @@
 package ed.inf.adbs.minibase;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import ed.inf.adbs.minibase.base.ComparisonAtom;
 import ed.inf.adbs.minibase.base.Term;
 import ed.inf.adbs.minibase.base.Variable;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class JoinOperator extends Operator {
 	private Operator leftChildOP;
@@ -31,7 +31,7 @@ public class JoinOperator extends Operator {
 			if(mergedTuple != null) {
 				boolean pass = true;
 				for(int i=0; i<conditions.size(); i++) {
-					if(!ComparisonCheck.checkCondition(mergedTuple, conditions.get(i))) {
+					if(!Compare.checkCondition(mergedTuple, conditions.get(i))) {
 						pass = false;
 					}
 				}
@@ -64,11 +64,11 @@ public class JoinOperator extends Operator {
 		HashMap<String, Integer> newVarRef = new HashMap<String, Integer>();
 		
 		ArrayList<String> values1 = tuple1.getValues();
-		ArrayList<String> schema1 = tuple1.getSchema();
+		ArrayList<String> schema1 = tuple1.getSchemas();
 		ArrayList<Term> terms1 = tuple1.getTerms();
 		
 		ArrayList<String> values2 = tuple2.getValues();
-		ArrayList<String> schema2 = tuple2.getSchema();
+		ArrayList<String> schema2 = tuple2.getSchemas();
 		ArrayList<Term> terms2 = tuple2.getTerms();
 		
 		for(int i=0; i<values1.size(); i++) {
