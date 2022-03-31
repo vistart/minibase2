@@ -5,65 +5,47 @@ import ed.inf.adbs.minibase.base.Term;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 
 public class ScanOperator extends Operator {
-	private Catalog cat;
-	private String relationName;
-	private Scanner myReader;
-	private ArrayList<String> schema;
-	private ArrayList<Term> terms;
-	private HashMap<String,Integer> varRef;
-	
-	public ScanOperator(RelationalAtom atom, String databaseDir) {
-		this.cat = Catalog.getInstance(databaseDir);
-		this.relationName = atom.getName();
+	private final Catalog catalog;
+	private final String relation;
+	private Scanner scanner;
+	private final ArrayList<String> schemas;
+	private final ArrayList<Term> terms;
+	private final HashMap<String, Integer> refs;
+
+	public ScanOperator(RelationalAtom atom, String dbDir) {
+		this.catalog = Catalog.getInstance(dbDir);
+		this.relation = atom.getName();
 		this.reset();
-		this.schema = cat.getSchemaMap().get(relationName);
-		this.parseAtom(atom);
-	}
-	@Override
-	Tuple getNextTuple() {
-		if(myReader.hasNextLine()) {
-			String[] vals = myReader.nextLine().split(", ");
-			ArrayList<String> values = new ArrayList<String>();
-			for(int i=0; i<vals.length; i++) {
-				values.add(vals[i]);
-			}
-			
-			return new Tuple(values, this.schema, this.terms, this.varRef);
+		this.schemas = catalog.getSchemaMap().get(relation);
+		this.refs = new HashMap<>();
+		this.terms = new ArrayList<>();
+		List<Term> t = atom.getTerms();
+		for (int i = 0; i < t.size(); i++) {
+			Term term = t.get(i);
+			this.terms.add(term);
+			refs.put(term.toString(), i);
 		}
-		return null;
 	}
 
 	@Override
+	Tuple getNextTuple() {
+		if (scanner.hasNextLine()) {
+			return new Tuple(new ArrayList<>(Arrays.asList(scanner.nextLine().split(", "))), this.schemas, this.terms, this.refs);
+		}
+		return null;
+	}
+	@Override
 	void reset() {
 		try {
-			String fDir = this.cat.getNameMap().get(this.relationName);
-			File f = new File(fDir);
-			myReader = new Scanner(f);
+			String fDir = this.catalog.getNameMap().get(this.relation);
+			scanner = new Scanner(new File(fDir));
 		}
 		catch(FileNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
-	/**
-     * Save the Atom terms into a list and record the position of them
-     * @param atom  the atom to parse
-     */
-	private void parseAtom(RelationalAtom atom){
-		this.varRef = new HashMap<String,Integer>();
-		this.terms = new ArrayList<Term>();
-		List<Term> ts = atom.getTerms();
-		for(int i=0; i<ts.size(); i++) {
-			Term term = ts.get(i);
-			this.terms.add(term);
-			varRef.put(term.toString(), i);
-		}
-	}
-	
 }

@@ -27,12 +27,12 @@ public class Interpreter {
     	
     	this.seperateBodyAtoms(this.body);
     	this.seperateComparisons(this.compAtoms);
-    	this.getSumOrAvgVar();
+    	//this.getSumOrAvgVar();
 	}
 	
 	/***
 	 * if there is aggregation, get the aggregation var
-	 */
+	 *//*
 	private void getSumOrAvgVar() {	
 		Atom lastAtom = this.body.get(body.size()-1);
 		if(lastAtom instanceof SumAtom) {
@@ -41,7 +41,7 @@ public class Interpreter {
 		else if(lastAtom instanceof AverageAtom) {
 			this.avgVariable = ((AverageAtom) lastAtom).getTerm().toString();
 		}
-	}
+	}*/
 	/**
      * Separate the Atoms in the Query Body into two list compAtoms and relaAtoms.
      */
